@@ -1,4 +1,3 @@
-from distutils.spawn import spawn
 import requests
 from bs4 import BeautifulSoup
 
@@ -9,13 +8,13 @@ indeed_soup = BeautifulSoup(indeed_result.text, 'html.parser')
 
 # pagination = indeed_soup.find('div', {'class': 'pagination'})
 pagination = indeed_soup.find('div', class_='pagination')
-pages = pagination.find_all('a')
+links = pagination.find_all('a')
 # pages = pagination('a')
-spans = []
+pages = []
 
+for link in links[0:-1]:
+    # pages.append(link.find('span').string)
+    pages.append(int(link.string))
+    # 앵커 안 요소에 string이 오직 하나 있다면 바로 .string으로 찾을 수 있다.
 
-for page in pages:
-    spans.append(page.find('span'))
-
-spans = spans[:-1]
-print(spans)
+max_page = pages[-1]
