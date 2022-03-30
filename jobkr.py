@@ -5,7 +5,7 @@ PERIOD = 4
 URL = f'https://www.jobkorea.co.kr/Search/?stext=%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C&tabType=recruit&period={PERIOD}'
 
 
-def extract_jobkr_pages():
+def get_last_page():
     result = requests.get(URL)
 
     soup = BeautifulSoup(result.text, 'html.parser')
@@ -20,7 +20,6 @@ def extract_jobkr_pages():
         pages.append(int(anchor['page-no']))
 
     max_page = pages[-1]
-
     return max_page
 
 
@@ -38,7 +37,7 @@ def extract_job(html):
         return {'title': title, 'company': company, 'location': location, 'link': f'https://www.jobkorea.co.kr/Recruit/GI_Read/{job_id}'}
 
 
-def extract_jobkr_jobs(last_pages=0):
+def extract_jobs(last_pages=0):
     jobs = []
     for page in range(last_pages):
         # print(f'scrapping page {page+1}')
@@ -50,4 +49,10 @@ def extract_jobkr_jobs(last_pages=0):
             job = extract_job(result)
             if job != None:
                 jobs.append(job)
+    return jobs
+
+
+def get_jobs():
+    last_page = get_last_page()
+    jobs = extract_jobs(last_page)
     return jobs
